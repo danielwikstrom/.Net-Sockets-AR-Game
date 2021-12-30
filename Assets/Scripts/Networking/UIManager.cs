@@ -8,14 +8,13 @@ public class UIManager : MonoBehaviour
 {
     public GameObject MainUI;
 
-    [HideInInspector]
     public string username;
 
     public TMP_InputField usernameInput;
 
     public void OnConnectIsPressed()
     {
-        if (usernameInput.text.Equals(""))
+        if (usernameInput.text == "")
         {
             Debug.Log("USERNAME IS NEEDED");
             //TODO: this should be seen on screen
