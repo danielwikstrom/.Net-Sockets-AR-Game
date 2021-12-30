@@ -10,16 +10,23 @@ namespace GameServer
         {
             int clientID = packet.ReadInt();
             string username = packet.ReadString();
-
+            Server.clients[clientID].username = username;
             Console.WriteLine($"Player {username} with id {clientID} is now connected");
 
             //TODO: send lobby info to clients
+            ServerSend.SendLobbyInfo(clientID);
         }
 
         public static void ReceiveUDPInit(int client, Packet packet)
         {
             string msg = packet.ReadString();
             Console.WriteLine($"Client {client}: {msg}");
+        }
+
+        public static void RequestLobbyInfo(int client, Packet packet)
+        {
+            int clientID = packet.ReadInt();
+            ServerSend.SendExistingLobbyInfo(clientID);
         }
     }
 }

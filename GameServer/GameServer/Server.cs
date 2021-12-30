@@ -10,7 +10,9 @@ namespace GameServer
     public enum PacketType
     {
         TCPInitial = 1,
-        UDPInitial
+        UDPInitial,
+        LobbyInfo,
+        LobbyRequest
     }
 
     class Server
@@ -133,7 +135,8 @@ namespace GameServer
             packetManagers = new Dictionary<int, PacketManager>()
             {
                 { (int)PacketType.TCPInitial, PacketHandler.ReceiveInitMsg},
-                { (int)PacketType.UDPInitial, PacketHandler.ReceiveUDPInit}
+                { (int)PacketType.UDPInitial, PacketHandler.ReceiveUDPInit},
+                { (int)PacketType.LobbyRequest, PacketHandler.RequestLobbyInfo}
             };
         }
     }

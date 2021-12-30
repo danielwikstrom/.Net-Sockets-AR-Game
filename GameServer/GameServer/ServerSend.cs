@@ -69,5 +69,40 @@ namespace GameServer
                 SendPacketUDP(client, packet);
             }
         }
+
+        /// <summary>
+        /// Send relevant player information to all connected players
+        /// </summary>
+        /// <param name="client"></param>
+        public static void SendLobbyInfo(int client)
+        {
+            // calling a packet with the "using" block will make sure to dispose the packet automatically, as the packets
+            // use the interface "IDisposable".
+
+            using (Packet packet = new Packet((int)PacketType.LobbyInfo))
+            {
+                packet.Write(Server.clients[client].username);
+                packet.Write(client);
+                Console.WriteLine($"Sending player {Server.clients[client].username} lobby info to all clients...");
+                SendPacketToAllTCP(packet);
+            }
+        }
+
+        public static void SendExistingLobbyInfo(int client)
+        {
+            for (int i = 1; i <= Server.clients.Count; i++)
+            {
+                if (Server.clients[i].username != "" && i != client)
+                {
+                    using (Packet packet = new Packet((int)PacketType.LobbyInfo))
+                    {
+                        packet.Write(Server.clients[i].username);
+                        packet.Write(i);
+                        Console.WriteLine($"Sending player {Server.clients[client].username} existing lobby info...");
+                        SendPacketTCP(client, packet);
+                    }
+                }
+            }
+        }
     }
 }

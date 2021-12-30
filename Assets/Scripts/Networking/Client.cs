@@ -9,7 +9,9 @@ using System.Text;
 public enum PacketType
 {
     TCPInitial = 1,
-    UDPInitial
+    UDPInitial,
+    LobbyInfo,
+    LobbyRequest
 }
 public class Client : MonoBehaviour
 {
@@ -275,7 +277,8 @@ public class Client : MonoBehaviour
         packetManagers = new Dictionary<int, PacketManager>()
         {
             {(int)PacketType.TCPInitial, PacketHandler.ReadInitMsg},
-            {(int)PacketType.UDPInitial, PacketHandler.ReadUDPInit}
+            {(int)PacketType.UDPInitial, PacketHandler.ReadUDPInit},
+            {(int)PacketType.LobbyInfo, PacketHandler.ReadLobbyInfo}
 
         };
     }

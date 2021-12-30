@@ -14,6 +14,7 @@ public class ClientSend : MonoBehaviour
     {
         packet.WriteLength();
         Client.instance.udp.SendPacket(packet);
+
     }
 
     public static void OnReceivedInitMsg()
@@ -34,6 +35,16 @@ public class ClientSend : MonoBehaviour
             packet.Write("UDP connection succesful");
 
             SendPacketUDP(packet);
+        }
+    }
+
+    public static void RequestLobbyInfo()
+    {
+        using (Packet packet = new Packet((int)PacketType.LobbyRequest))
+        {
+            packet.Write(Client.instance.id);
+
+            SendPacketTCP(packet);
         }
     }
 }
