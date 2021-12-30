@@ -11,7 +11,9 @@ public enum PacketType
     TCPInitial = 1,
     UDPInitial,
     LobbyInfo,
-    LobbyRequest
+    LobbyRequest,
+    StartGame,
+    UpdateTransform
 }
 public class Client : MonoBehaviour
 {
@@ -278,7 +280,9 @@ public class Client : MonoBehaviour
         {
             {(int)PacketType.TCPInitial, PacketHandler.ReadInitMsg},
             {(int)PacketType.UDPInitial, PacketHandler.ReadUDPInit},
-            {(int)PacketType.LobbyInfo, PacketHandler.ReadLobbyInfo}
+            {(int)PacketType.LobbyInfo, PacketHandler.ReadLobbyInfo},
+            {(int)PacketType.StartGame, PacketHandler.StartGame},
+            {(int)PacketType.UpdateTransform, PacketHandler.UpdateRemotePlayerTransform}
 
         };
     }

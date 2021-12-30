@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody _rb;
     private Camera _cam;
+    private Transform _transform;
     private float yaw;
     private float pitch;
 
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _cam = GetComponentInChildren<Camera>();
+        _transform = GetComponent<Transform>();
         yaw = transform.eulerAngles.y;
         pitch = transform.eulerAngles.x;
     }
@@ -47,6 +49,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    private void FixedUpdate()
+    {
+        ClientSend.SendTransform(_transform.position, _transform.rotation);
+    }
 
     private void OnGUI()
     {

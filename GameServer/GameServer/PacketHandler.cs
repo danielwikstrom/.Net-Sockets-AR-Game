@@ -28,5 +28,19 @@ namespace GameServer
             int clientID = packet.ReadInt();
             ServerSend.SendExistingLobbyInfo(clientID);
         }
+
+        public static void ReceiveStartGame(int client, Packet packet)
+        {
+            Server.StartGame();
+            ServerSend.SendStartGame();
+        }
+
+        public static void ReceiveTransform(int client, Packet packet)
+        {
+            int clientID = packet.ReadInt();
+            Vector3 position = packet.ReadVector();
+            Quaternion rotation = packet.ReadQuaternion();
+            ServerSend.UpdatePlayerTransform(clientID, position, rotation);
+        }
     }
 }

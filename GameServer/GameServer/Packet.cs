@@ -4,6 +4,36 @@ using System.Text;
 
 namespace GameServer
 {
+
+    public struct Vector3
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        public Vector3(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    public struct Quaternion
+    {
+        public float x;
+        public float y;
+        public float z;
+        public float w;
+
+        public Quaternion(float x, float y, float z, float w)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
+        }
+    }
     public class Packet : IDisposable
     {
         private List<byte> buffer;
@@ -145,6 +175,25 @@ namespace GameServer
             Write(_value.Length); // Add the length of the string to the packet
             buffer.AddRange(Encoding.ASCII.GetBytes(_value)); // Add the string itself
         }
+
+        /// <summary>Adds a vector to the packet.</summary>
+        /// <param name="_value">The vector to add.</param>
+        public void Write(Vector3 _value)
+        {
+            Write(_value.x);
+            Write(_value.y);
+            Write(_value.z);
+        }
+
+        /// <summary>Adds a quaternion to the packet.</summary>
+        /// <param name="_value">The quaternion to add.</param>
+        public void Write(Quaternion _value)
+        {
+            Write(_value.x);
+            Write(_value.y);
+            Write(_value.z);
+            Write(_value.w);
+        }
         #endregion
 
         #region Read Data
@@ -278,6 +327,20 @@ namespace GameServer
             {
                 throw new Exception("Could not read value of type 'float'!");
             }
+        }
+
+        /// <summary>Reads a vector from the packet.</summary>
+        /// <param name="_moveReadPos">Whether or not to move the buffer's read position.</param>
+        public Vector3 ReadVector(bool _moveReadPos = true)
+        {
+            return new Vector3(ReadFloat(_moveReadPos), ReadFloat(_moveReadPos), ReadFloat(_moveReadPos));
+        }
+
+        /// <summary>Reads a quaternion from the packet.</summary>
+        /// <param name="_moveReadPos">Whether or not to move the buffer's read position.</param>
+        public Quaternion ReadQuaternion(bool _moveReadPos = true)
+        {
+            return new Quaternion(ReadFloat(_moveReadPos), ReadFloat(_moveReadPos), ReadFloat(_moveReadPos), ReadFloat(_moveReadPos));
         }
 
         /// <summary>Reads a bool from the packet.</summary>

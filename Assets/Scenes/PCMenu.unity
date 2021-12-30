@@ -865,7 +865,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 474507962}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 935785455}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: NetworkStartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &474507962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1803,6 +1815,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f64f504ffa36684c80220a3460db02f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 2989722534518972045, guid: b18d6c9d71000114bac4ddcbcf356e4e, type: 3}
+  remotePlayerPrefab: {fileID: 2989722534518972045, guid: aa7c4b966d1b8a647bbe364944646663, type: 3}
 --- !u!4 &935785456
 Transform:
   m_ObjectHideFlags: 0

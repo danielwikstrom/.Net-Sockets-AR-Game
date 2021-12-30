@@ -17,9 +17,15 @@ public class PacketHandler : MonoBehaviour
 
         // UDP connection uses the same local port as tcp
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
+    }
 
-
-
+    /// <summary>
+    /// This method takes an empty packed as it is only a request from the server to all clients to start the game
+    /// </summary>
+    /// <param name="packet"></param>
+    public static void StartGame(Packet packet)
+    {
+        GameManager.instance.StartGame();
     }
 
     public static void ReadUDPInit(Packet packet)
@@ -37,5 +43,14 @@ public class PacketHandler : MonoBehaviour
         int id = packet.ReadInt();
         Debug.Log("Player " + username + " is in session");
         GameManager.instance.InitPlayer(id, username, Vector3.zero, Quaternion.identity);
+    }
+
+    public static void UpdateRemotePlayerTransform(Packet packet)
+    {
+        int clientID = packet.ReadInt();
+        Vector3 position = packet.ReadVector();
+        Quaternion rotation = packet.ReadQuaternion();
+
+        GameManager.instance.UpdatePlayerTransform(clientID, position, rotation);
     }
 }

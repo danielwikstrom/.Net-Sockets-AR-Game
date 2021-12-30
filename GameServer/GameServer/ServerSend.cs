@@ -104,5 +104,31 @@ namespace GameServer
                 }
             }
         }
+
+        public static void SendStartGame()
+        {
+            using (Packet packet = new Packet((int)PacketType.StartGame))
+            {
+                SendPacketToAllTCP(packet);
+            }
+        }
+
+        /// <summary>
+        /// Updates via UDP all clients with a specifics client new position and rotation
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        public static void UpdatePlayerTransform(int client, Vector3 position, Quaternion rotation)
+        {
+            using (Packet packet = new Packet((int)PacketType.UpdateTransform))
+            {
+                packet.Write(client);
+                packet.Write(position);
+                packet.Write(rotation);
+
+                SendPacketToAllUDP(packet, client);
+            }
+        }
     }
 }

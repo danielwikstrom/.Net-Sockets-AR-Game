@@ -12,7 +12,9 @@ namespace GameServer
         TCPInitial = 1,
         UDPInitial,
         LobbyInfo,
-        LobbyRequest
+        LobbyRequest,
+        StartGame,
+        UpdateTransform
     }
 
     class Server
@@ -20,6 +22,7 @@ namespace GameServer
         public static int MaxPlayers { get; private set; }
         public static int Port { get; private set; }
 
+        private static bool AcceptConnections = true;
         private static TcpListener tcpListener;
         private static UdpClient udpClient;
         public static Dictionary<int, ClientData> clients = new Dictionary<int, ClientData>();
@@ -54,15 +57,17 @@ namespace GameServer
             //After accepting a client, the server keeps waiting for another client to connect
             tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectAsync), null);
             Console.WriteLine($"Incoming connection from {client.Client.RemoteEndPoint} ...");
-
-            for (int i = 1; i <= MaxPlayers; i++)
+            if (AcceptConnections)
             {
-                //if clients socket is null it means that it has not been assigned to a connected client yet
-                if (clients[i].tcp.socket == null)
+                for (int i = 1; i <= MaxPlayers; i++)
                 {
-                    clients[i].tcp.Connect(client);
-                    Console.WriteLine($"Client connected via TCP: {client.Client.RemoteEndPoint}");
-                    return;
+                    //if clients socket is null it means that it has not been assigned to a connected client yet
+                    if (clients[i].tcp.socket == null)
+                    {
+                        clients[i].tcp.Connect(client);
+                        Console.WriteLine($"Client connected via TCP: {client.Client.RemoteEndPoint}");
+                        return;
+                    }
                 }
             }
 
@@ -136,8 +141,15 @@ namespace GameServer
             {
                 { (int)PacketType.TCPInitial, PacketHandler.ReceiveInitMsg},
                 { (int)PacketType.UDPInitial, PacketHandler.ReceiveUDPInit},
-                { (int)PacketType.LobbyRequest, PacketHandler.RequestLobbyInfo}
+                { (int)PacketType.LobbyRequest, PacketHandler.RequestLobbyInfo},
+                { (int)PacketType.StartGame, PacketHandler.ReceiveStartGame},
+                { (int)PacketType.UpdateTransform, PacketHandler.ReceiveTransform}
             };
+        }
+
+        public static void StartGame()
+        {
+            AcceptConnections = false;
         }
     }
 }

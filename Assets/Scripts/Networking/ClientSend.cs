@@ -47,4 +47,24 @@ public class ClientSend : MonoBehaviour
             SendPacketTCP(packet);
         }
     }
+
+    public static void StartGame()
+    {
+        using (Packet packet = new Packet((int)PacketType.StartGame))
+        {
+            SendPacketTCP(packet);
+        }
+    }
+
+    public static void SendTransform(Vector3 position, Quaternion rotation)
+    {
+        using (Packet packet = new Packet((int)PacketType.UpdateTransform))
+        {
+            packet.Write(Client.instance.id);
+            packet.Write(position);
+            packet.Write(rotation);
+
+            SendPacketUDP(packet);
+        }
+    }
 }
