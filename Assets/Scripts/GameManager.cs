@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     public Dictionary<int, Transform> playerTransforms;
     public GameObject playerPrefab;
     public GameObject remotePlayerPrefab;
+    public GameObject floor;
+    public GameObject transparentFloor;
     private Transform Map;
     private Transform spawner;
     private bool updatePositions = false;

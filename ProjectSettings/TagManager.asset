@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Spawner
   - Map
+  - Floor
+  - ARFloor
   layers:
   - Default
   - TransparentFX

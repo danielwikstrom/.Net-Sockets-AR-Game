@@ -39,6 +39,8 @@ public class ARManager : MonoBehaviour
                 _planeManager.requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
                 _planeManager.SetTrackablesActive(false);
                 UIManager.instance.ShowUI(true);
+                GameObject.FindGameObjectWithTag("Floor").SetActive(false);
+                GameObject.FindGameObjectWithTag("ARFloor").SetActive(true);
             }
         }
     }
