@@ -75,15 +75,14 @@ public class GameManager : MonoBehaviour
     {
         if (updatePositions)
         {
-            for (int i = 1; i <= players.Count; i++)
+            foreach(KeyValuePair<int, PlayerData> entry in players)
             {
-                Debug.Log(playerTransforms[i].name + " new position is : " + players[i].positions[0]);
-                if (i != Client.instance.id)
+                if (entry.Key != Client.instance.id)
                 {
                     
                     //TODO: Change to interpolate between ticks
-                    playerTransforms[i].localPosition = players[i].positions[0];
-                    playerTransforms[i].localRotation = players[i].rotations[0];
+                    playerTransforms[entry.Key].localPosition = entry.Value.positions[0];
+                    playerTransforms[entry.Key].localRotation = entry.Value.rotations[0];
                 }
             }
         }
