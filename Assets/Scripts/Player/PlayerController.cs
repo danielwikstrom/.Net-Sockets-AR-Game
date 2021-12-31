@@ -52,7 +52,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ClientSend.SendTransform(_transform.position, _transform.rotation);
+
+        ClientSend.SendTransform(_transform.localPosition, _transform.localRotation);
     }
 
     private void OnGUI()

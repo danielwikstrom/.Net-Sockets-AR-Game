@@ -11,6 +11,7 @@ namespace GameServer
         public static int dataBufferSize = 1024;
         public int id;
         public string username = "";
+        public bool isPC;
         public TCP tcp;
         public UDP udp;
 

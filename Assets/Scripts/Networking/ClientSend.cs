@@ -22,6 +22,7 @@ public class ClientSend : MonoBehaviour
         using (Packet packet = new Packet((int)PacketType.TCPInitial))
         {
             packet.Write(Client.instance.id);
+            packet.Write(Client.instance.isPC);
             packet.Write(Client.instance.username);
 
             SendPacketTCP(packet);

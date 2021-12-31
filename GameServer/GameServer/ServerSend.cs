@@ -83,6 +83,7 @@ namespace GameServer
             {
                 packet.Write(Server.clients[client].username);
                 packet.Write(client);
+                packet.Write(Server.clients[client].isPC);
                 Console.WriteLine($"Sending player {Server.clients[client].username} lobby info to all clients...");
                 SendPacketToAllTCP(packet);
             }
@@ -98,6 +99,7 @@ namespace GameServer
                     {
                         packet.Write(Server.clients[i].username);
                         packet.Write(i);
+                        packet.Write(Server.clients[i].isPC);
                         Console.WriteLine($"Sending player {Server.clients[client].username} existing lobby info...");
                         SendPacketTCP(client, packet);
                     }

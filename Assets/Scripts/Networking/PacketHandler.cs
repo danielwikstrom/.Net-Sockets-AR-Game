@@ -41,8 +41,12 @@ public class PacketHandler : MonoBehaviour
     {
         string username = packet.ReadString();
         int id = packet.ReadInt();
+        bool isPC = packet.ReadBool();
         Debug.Log("Player " + username + " is in session");
-        GameManager.instance.InitPlayer(id, username, Vector3.zero, Quaternion.identity);
+        if (isPC)
+            GameManager.instance.InitPlayer(id, username, Vector3.zero, Quaternion.identity);
+        else
+            GameManager.instance.InitSpectator(id, username);
     }
 
     public static void UpdateRemotePlayerTransform(Packet packet)

@@ -9,8 +9,10 @@ namespace GameServer
         public static void ReceiveInitMsg(int client, Packet packet)
         {
             int clientID = packet.ReadInt();
+            bool isPC = packet.ReadBool();
             string username = packet.ReadString();
             Server.clients[clientID].username = username;
+            Server.clients[clientID].isPC = isPC;
             Console.WriteLine($"Player {username} with id {clientID} is now connected");
 
             //TODO: send lobby info to clients

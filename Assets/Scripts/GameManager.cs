@@ -62,7 +62,13 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         //TODO: check if PC
-        SceneManager.LoadScene("PCScene");
+        if(Client.instance.isPC)
+            SceneManager.LoadScene("PCScene");
+        else
+        {
+            UIManager.instance.ShowUI(false);
+            SpawnPlayers();
+        }
     }
 
     private void FixedUpdate()
@@ -76,8 +82,8 @@ public class GameManager : MonoBehaviour
                 {
                     
                     //TODO: Change to interpolate between ticks
-                    playerTransforms[i].position = players[i].positions[0];
-                    playerTransforms[i].rotation = players[i].rotations[0];
+                    playerTransforms[i].localPosition = players[i].positions[0];
+                    playerTransforms[i].localRotation = players[i].rotations[0];
                 }
             }
         }
@@ -128,10 +134,12 @@ public class GameManager : MonoBehaviour
 
     private void OnLevelWasLoaded(int level)
     {
-        if (level == 1)
-        {
+        //if (SceneManager.GetSceneAt(level).name == "PCScene")
+        //{
+        //    SpawnPlayers();
+        //}
+        if(Client.instance.isPC)
             SpawnPlayers();
-        }
     }
 
     public void UpdatePlayerTransform(int playerID, Vector3 position, Quaternion rotation)

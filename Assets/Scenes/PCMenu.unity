@@ -245,6 +245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4766910f4a674d14c88a59abb1c335b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainUI: {fileID: 1530476449}
+  Background: {fileID: 2045776419}
   ConnectUI: {fileID: 883808733}
   LobbyUI: {fileID: 2068958517}
   username: 
