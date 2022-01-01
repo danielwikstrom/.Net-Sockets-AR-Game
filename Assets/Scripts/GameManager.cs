@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public GameObject transparentFloor;
     private Transform Map;
     private Transform spawner;
-    private bool updatePositions = false;
+    private bool matchStarted = false;
 
 
     private void Awake()
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (updatePositions)
+        if (matchStarted)
         {
             foreach(KeyValuePair<int, PlayerData> entry in players)
             {
@@ -157,18 +157,24 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDisconnected(int playerID)
     {
+        if (!matchStarted)
+        {
+            //update lobby
+        }
         if (players.ContainsKey(playerID))
         {
             Debug.Log("P{layer " + players[playerID].username + " disconnected");
-            Destroy(playerTransforms[playerID].gameObject);
-            playerTransforms.Remove(playerID);
+            if (matchStarted)
+            {
+                Destroy(playerTransforms[playerID].gameObject);
+                playerTransforms.Remove(playerID);
+            }
             players.Remove(playerID);
         }
         else if (spectators.ContainsKey(playerID))
         {
             Debug.Log("Spectator " + spectators[playerID].username + " disconnected");
             spectators.Remove(playerID);
-
         }
         else
         {
@@ -257,7 +263,7 @@ public class GameManager : MonoBehaviour
             i++;
         }
 
-        updatePositions = true;
+        matchStarted = true;
     }
 
 }

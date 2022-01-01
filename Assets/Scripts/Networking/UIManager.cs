@@ -54,6 +54,14 @@ public class UIManager : MonoBehaviour
             {
                 PlayButton.gameObject.SetActive(true);
             }
+            for (int i = 0; i < Players.Length; i++)
+            {
+                Players[i].text = "";
+            }
+            for (int i = 0; i < Spectators.Length; i++)
+            {
+                Spectators[i].text = "";
+            }
             int playerNum = 0;
             int spectatorNum = 0;
             for (int i = 1; i <= GameManager.instance.players.Count + GameManager.instance.spectators.Count; i++)
