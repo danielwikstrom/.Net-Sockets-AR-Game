@@ -13,7 +13,8 @@ public enum PacketType
     LobbyInfo,
     LobbyRequest,
     StartGame,
-    UpdateTransform
+    UpdateTransform,
+    PlayerDisconnected
 }
 public class Client : MonoBehaviour
 {
@@ -90,6 +91,15 @@ public class Client : MonoBehaviour
             socket.BeginConnect(instance.ip, instance.port, ConnectAsync, socket);
         }
 
+        public void Disconnect()
+        {
+            instance.Disconnect();
+            receiveBuffer = null;
+            receivedPacket = null;
+            stream = null;
+            socket = null;
+        }
+
         private void ConnectAsync(IAsyncResult result)
         {
             socket.EndConnect(result);
@@ -127,8 +137,8 @@ public class Client : MonoBehaviour
                 int receivedDataLength = stream.EndRead(result);
                 if (receivedDataLength <= 0)
                 {
+                    Disconnect();
                     return;
-                    //probably disconnet client
                 }
                 byte[] data = new byte[receivedDataLength];
                 Array.Copy(receiveBuffer, data, receivedDataLength);
@@ -141,6 +151,7 @@ public class Client : MonoBehaviour
             }
             catch (Exception e)
             {
+                Disconnect();
                 Debug.LogError("Error: " + e);
                 //disconnect client
             }
@@ -219,6 +230,13 @@ public class Client : MonoBehaviour
             }
         }
 
+        public void Disconnect()
+        {
+            instance.Disconnect();
+            ipEndPoint = null;
+            socket = null;
+        }
+
         public void SendPacket(Packet packet)
         {
             try
@@ -244,12 +262,14 @@ public class Client : MonoBehaviour
 
                 if (data.Length < sizeof(int))
                 {
+                    instance.Disconnect();
                     return;
                 }
                 HandleData(data);
             }
             catch (Exception e)
             {
+                Disconnect();
                 Debug.Log("Error: " + e);
             }
         }
@@ -282,8 +302,22 @@ public class Client : MonoBehaviour
             {(int)PacketType.UDPInitial, PacketHandler.ReadUDPInit},
             {(int)PacketType.LobbyInfo, PacketHandler.ReadLobbyInfo},
             {(int)PacketType.StartGame, PacketHandler.StartGame},
-            {(int)PacketType.UpdateTransform, PacketHandler.UpdateRemotePlayerTransform}
+            {(int)PacketType.UpdateTransform, PacketHandler.UpdateRemotePlayerTransform},
+            {(int)PacketType.PlayerDisconnected, PacketHandler.PlayerDisconnected}
 
         };
+    }
+
+    public void Disconnect()
+    {
+        tcp.socket.Close();
+        udp.socket.Close();
+
+        Debug.Log("Player disconnected");
+    }
+
+    private void OnApplicationQuit()
+    {
+        Disconnect();
     }
 }

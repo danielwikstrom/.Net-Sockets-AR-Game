@@ -21,6 +21,11 @@ public class GameManager : MonoBehaviour
         /// case of packet loss
         public List<Quaternion> rotations;
 
+        /// <summary>
+        /// The time when the positions and rotations were recorded, used to do linear prediction
+        /// </summary>
+        public List<float> time;
+
     }
 
     public struct SpectatorData
@@ -83,11 +88,44 @@ public class GameManager : MonoBehaviour
                 {
                     
                     //TODO: Change to interpolate between ticks
-                    playerTransforms[entry.Key].localPosition = entry.Value.positions[0];
-                    playerTransforms[entry.Key].localRotation = entry.Value.rotations[0];
+                    playerTransforms[entry.Key].localPosition = LinearPrediction(entry.Value.positions, entry.Value.time);
+                    playerTransforms[entry.Key].localRotation = AngularInterpolation(entry.Value.rotations, entry.Value.time);
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// This method calculates the predicted position for a given player, using its latest known positions and the time when thos positions were recorded
+    /// </summary>
+    /// <param name="recordedPositions"></param>
+    /// <param name="recordedTimes"></param>
+    /// <returns></returns>
+    private Vector3 LinearPrediction(List<Vector3> recordedPositions, List<float> recordedTimes)
+    {
+        Vector3 predictedPosition = Vector3.zero;
+        float speedX = 0.0f, speedY = 0.0f, speedZ = 0.0f;
+        if (recordedTimes[0] > recordedTimes[1])
+        { 
+        speedX = ((recordedPositions[0].x - recordedPositions[1].x)) / (recordedTimes[0] - recordedTimes[1]);
+        speedY = ((recordedPositions[0].y - recordedPositions[1].y)) / (recordedTimes[0] - recordedTimes[1]);
+        speedZ = ((recordedPositions[0].z - recordedPositions[1].z)) / (recordedTimes[0] - recordedTimes[1]);
+        }
+        predictedPosition.x = recordedPositions[0].x + (speedX * (Time.time - recordedTimes[0]));
+        predictedPosition.y = recordedPositions[0].y + (speedY * (Time.time - recordedTimes[0]));
+        predictedPosition.z = recordedPositions[0].z + (speedZ * (Time.time - recordedTimes[0]));
+
+        return predictedPosition;
+    }
+
+    private Quaternion AngularInterpolation(List<Quaternion> recordedRotations, List<float> recordedTimes)
+    {
+        Quaternion predictedRotation = Quaternion.identity;
+        float timeSinceUpdate = Time.time - recordedTimes[0];
+        float ticksSinceUpdate = timeSinceUpdate / Time.fixedDeltaTime;
+        float LerpAmount = (Time.fixedDeltaTime * ticksSinceUpdate)/(timeSinceUpdate);
+        predictedRotation = Quaternion.Lerp(recordedRotations[1], recordedRotations[0], LerpAmount);
+        return predictedRotation;
     }
 
     public void InitPlayer(int id, string username, Vector3 initPos, Quaternion initRot)
@@ -98,14 +136,13 @@ public class GameManager : MonoBehaviour
         p.id = id;
         p.username = username;
         p.positions = new List<Vector3>();
+        p.rotations = new List<Quaternion>();
+        p.time = new List<float>();
         for (int i = 0; i < 3; i++)
         {
             p.positions.Add(initPos);
-        }
-        p.rotations = new List<Quaternion>();
-        for (int i = 0; i < 3; i++)
-        {
             p.rotations.Add(initRot);
+            p.time.Add(Time.time);
         }
         players.Add(id, p);
     }
@@ -120,13 +157,25 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDisconnected(int playerID)
     {
-        players.Remove(playerID);
+        if (players.ContainsKey(playerID))
+        {
+            Debug.Log("P{layer " + players[playerID].username + " disconnected");
+            Destroy(playerTransforms[playerID].gameObject);
+            playerTransforms.Remove(playerID);
+            players.Remove(playerID);
+        }
+        else if (spectators.ContainsKey(playerID))
+        {
+            Debug.Log("Spectator " + spectators[playerID].username + " disconnected");
+            spectators.Remove(playerID);
+
+        }
+        else
+        {
+            Debug.Log("No player found with id " + playerID);
+        }
     }
 
-    public void SpectatorDisconnected(int playerID)
-    {
-        spectators.Remove(playerID);
-    }
 
     public void NetworkStartGame()
     {
@@ -147,10 +196,12 @@ public class GameManager : MonoBehaviour
     {
         AddNewPos(players[playerID].positions, position);
         AddNewRot(players[playerID].rotations, rotation);
+        RecordTime(players[playerID].time);
     }
 
     public void AddNewPos(List<Vector3> list, Vector3 newPos)
     {
+
         for (int i = 0; i < list.Count - 1; i++)
         {
             list[i + 1] = list[i];
@@ -167,17 +218,28 @@ public class GameManager : MonoBehaviour
         list[0] = newRot;
     }
 
+    public void RecordTime(List<float> list)
+    {
+        Debug.Log(Time.time);
+        for (int i = 0; i < list.Count - 1; i++)
+        {
+            list[i + 1] = list[i];
+        }
+        list[0] = Time.time;
+    }
+
 
     private void SpawnPlayers()
     {
         Map = GameObject.FindGameObjectWithTag("Map").transform;
         spawner = GameObject.FindGameObjectWithTag("Spawner").transform;
-        for (int i = 1; i <= players.Count; i++)
+        int i = 0;
+        foreach (KeyValuePair<int, PlayerData> entry in players)
         {
-            int spawnerChild = (i-1) < (spawner.childCount) ? i - 1 : (i-1)%spawner.childCount;
+            int spawnerChild = (i) < (spawner.childCount - 1) ? i : (i)%(spawner.childCount-1);
             Transform spawnPos = spawner.GetChild(spawnerChild);
             GameObject go;
-            if (players[i].id == Client.instance.id)
+            if (entry.Value.id == Client.instance.id)
                 go = playerPrefab;
             else
                 go = remotePlayerPrefab;
@@ -185,14 +247,17 @@ public class GameManager : MonoBehaviour
             player.transform.position = spawnPos.transform.position;
             player.transform.rotation = spawnPos.transform.rotation;
 
-            playerTransforms.Add(i, player.transform);
+            playerTransforms.Add(entry.Key, player.transform);
             for (int j = 0; j < 3; j++)
             {
-                players[i].positions[j] = player.transform.position;
-                players[i].rotations[j] = player.transform.rotation;
+                entry.Value.positions[j] = player.transform.position;
+                entry.Value.rotations[j] = player.transform.rotation;
+                entry.Value.time[j] = Time.time;
             }
+            i++;
         }
 
         updatePositions = true;
     }
+
 }

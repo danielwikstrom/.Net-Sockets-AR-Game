@@ -33,7 +33,7 @@ public class ARManager : MonoBehaviour
                 ARPlane plane = (ARPlane)hit[0].trackable;
                 ARAnchor anchor = _anchorManager.AttachAnchor(plane, hit[0].pose);
                 map = GameObject.Instantiate(MapPrefab, anchor.transform);
-                map.transform.localScale *= 0.01f;
+                map.transform.localScale *= 0.02f;
                 mapInstantiated = true;
 
                 _planeManager.requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;

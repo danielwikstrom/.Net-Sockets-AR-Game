@@ -132,5 +132,15 @@ namespace GameServer
                 SendPacketToAllUDP(packet, client);
             }
         }
+
+        public static void ClientDisconnected(int clientID)
+        {
+            using (Packet packet = new Packet((int)PacketType.PlayerDisconnected))
+            {
+                packet.Write(clientID);
+
+                SendPacketToAllTCP(packet);
+            }
+        }
     }
 }

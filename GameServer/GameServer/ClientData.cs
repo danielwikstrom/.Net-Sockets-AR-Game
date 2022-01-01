@@ -48,6 +48,15 @@ namespace GameServer
                 ServerSend.SendInitMessage(this.id, "Succesfully conected to server");
             }
 
+            public void Disconnect()
+            {
+                socket.Close();
+                stream = null;
+                receivedPacket = null;
+                receiveBuffer = null;
+                socket = null;
+            }
+
             public void SendPacket(Packet packet)
             {
                 try
@@ -70,8 +79,8 @@ namespace GameServer
                     int receivedDataLength = stream.EndRead(result);
                     if (receivedDataLength <= 0)
                     {
+                        Server.clients[id].Disconnect();
                         return;
-                        //probably disconnet client
                     }
                     byte[] data = new byte[receivedDataLength];
                     Array.Copy(receiveBuffer, data, receivedDataLength);
@@ -86,7 +95,8 @@ namespace GameServer
                 catch (Exception e)
                 {
                     Console.WriteLine($"Error: {e}");
-                    //disconnect client
+
+                    Server.clients[id].Disconnect();
                 }
             }
 
@@ -158,6 +168,11 @@ namespace GameServer
                 ServerSend.SendInitUDP(id);
             }
 
+            public void Disconnect()
+            {
+                ipEndPoint = null;
+            }
+
             public void SendPacket(Packet packet)
             {
                 Server.SendPacketUDP(ipEndPoint, packet);
@@ -180,6 +195,15 @@ namespace GameServer
                 });
                 
             }
+        }
+
+        public void Disconnect()
+        {
+            Console.WriteLine($"Client {username} at {tcp.socket.Client.RemoteEndPoint} has disconnected");
+            username = "";
+            tcp.Disconnect();
+            udp.Disconnect();
+            ServerSend.ClientDisconnected(id);
         }
     }
 }

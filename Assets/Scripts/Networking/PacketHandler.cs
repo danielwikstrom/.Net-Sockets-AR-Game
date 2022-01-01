@@ -57,4 +57,10 @@ public class PacketHandler : MonoBehaviour
 
         GameManager.instance.UpdatePlayerTransform(clientID, position, rotation);
     }
+
+    public static void PlayerDisconnected(Packet packet)
+    {
+        int clientID = packet.ReadInt();
+        GameManager.instance.PlayerDisconnected(clientID);
+    }
 }

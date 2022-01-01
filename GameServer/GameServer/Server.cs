@@ -14,7 +14,8 @@ namespace GameServer
         LobbyInfo,
         LobbyRequest,
         StartGame,
-        UpdateTransform
+        UpdateTransform,
+        PlayerDisconnected
     }
 
     class Server
@@ -143,7 +144,9 @@ namespace GameServer
                 { (int)PacketType.UDPInitial, PacketHandler.ReceiveUDPInit},
                 { (int)PacketType.LobbyRequest, PacketHandler.RequestLobbyInfo},
                 { (int)PacketType.StartGame, PacketHandler.ReceiveStartGame},
-                { (int)PacketType.UpdateTransform, PacketHandler.ReceiveTransform}
+                { (int)PacketType.UpdateTransform, PacketHandler.ReceiveTransform},
+                { (int)PacketType.PlayerDisconnected, PacketHandler.ReceiveTransform}
+
             };
         }
 
