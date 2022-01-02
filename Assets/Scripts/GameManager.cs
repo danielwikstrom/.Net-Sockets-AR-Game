@@ -195,7 +195,10 @@ public class GameManager : MonoBehaviour
         //    SpawnPlayers();
         //}
         if(Client.instance.isPC)
+        {
+            GameObject.FindGameObjectWithTag("ARFloor").SetActive(false);
             SpawnPlayers();
+        }
     }
 
     public void UpdatePlayerTransform(int playerID, Vector3 position, Quaternion rotation)
