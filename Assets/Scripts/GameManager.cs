@@ -248,7 +248,11 @@ public class GameManager : MonoBehaviour
             if (entry.Value.id == Client.instance.id)
                 go = playerPrefab;
             else
-                go = remotePlayerPrefab;
+            {
+                    go = remotePlayerPrefab;
+                if (!Client.instance.isPC)
+                    go.transform.GetChild(1).gameObject.SetActive(true);
+            }
             var player = GameObject.Instantiate(go, Map);
             player.transform.position = spawnPos.transform.position;
             player.transform.rotation = spawnPos.transform.rotation;
