@@ -1,0 +1,14 @@
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.csproj.AssemblyReference.cache
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.AssemblyInfoInputs.cache
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.AssemblyInfo.cs
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.csproj.CoreCompileInputs.cache
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.exe
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.deps.json
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.runtimeconfig.json
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.runtimeconfig.dev.json
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.dll
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\bin\Debug\netcoreapp3.1\GameServer.pdb
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.dll
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.pdb
+D:\Git Projects\Abertay Projects\CMP501_Assessment\GameServer\GameServer\obj\Debug\netcoreapp3.1\GameServer.genruntimeconfig.cache
